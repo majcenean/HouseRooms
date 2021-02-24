@@ -4,9 +4,11 @@ February 21, 2021
 
 ### Overview
 
+
 ### Technical Details
+
 #### sketch_moodstates.js
+The sketch code for the Mood States assignment.
 
-#### img folder
-
-#### brainstorm folder
+#### assets/img folder
+Image assets.
