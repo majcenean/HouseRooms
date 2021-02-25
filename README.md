@@ -19,6 +19,9 @@ Image assets for the scenes.
 #### assets/instruct folder
 Image assets for the controls visualization.
 
+#### ART385_HouseRooms Adobe XD file
+Mockup for the layout of the house.
+
 #### assets/fonts
 Font assets:
 
