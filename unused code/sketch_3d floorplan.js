@@ -102,15 +102,15 @@ function setup() {
   // // background texture
   // for (var i = 0; i < 25; i++) {
   //   var scuffs = createSprite(random(100, SCENE_W - 100), random(100, SCENE_H - 100));
-  //   scuffs.addAnimation('usual', 'img/bg_texture/scuff.png');
+  //   scuffs.addAnimation('usual', 'assets/img/bg_texture/scuff.png');
   //   bg.add(scuffs);
   // }
 
   // mainsprite
   var mainspriteMove = mainsprite.addAnimation('idle',
-    'img/mainsprite/1.png', 'img/mainsprite/3.png');
+    'assets/img/mainsprite/1.png', 'assets/img/mainsprite/3.png');
 
-  mainsprite.addAnimation('moving', 'img/mainsprite/1.png', 'img/mainsprite/2.png');
+  mainsprite.addAnimation('moving', 'assets/img/mainsprite/1.png', 'assets/img/mainsprite/2.png');
 
 
 
