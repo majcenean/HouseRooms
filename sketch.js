@@ -14,24 +14,36 @@
 /*************************************************************************
 // Global variables
 **************************************************************************/
-// Variables of images
+// Scene Images
 var imgBg = [];
 var imgChar = [];
 var splash_img;
 var cursor;
-
 var imgRatio = 1.7;
-var gTextOffset = 50;
 
+// Control key images Part 1
 var imgMouse;
+var imgMouseGrey;
 var imgWASD;
 var imgARROWS;
+var imgRightARROWS;
+
+// Control image X and Y position and width/height
 var wasdX;
 var wasdY;
 var arrowX;
 var arrowY;
+var instructWH;
 
-// Variables of fonts
+// Control key images Part 2
+var imgKeyI;
+var imgKeyF;
+var imgKeyEsc;
+var imgInstruct = [];
+var gTextOffset = 120;
+var instructPgWH = 200;
+
+// Fonts
 var fontMtHills;
 var fontCoco;
 
@@ -40,7 +52,7 @@ var colorsRow1 = ["#FADEA8", "#EBB07A", "#E8CFBF", "#D1CFB2"];
 var colorsRow2 = ["#E3B585", "#D98A70", "#B59E8F", "#6E4538"];
 var colorsRow3 = ["#918F6B", "#A1D1C2", "#9CB5C9", "#4F99B8"];
 var colorsRow4 = ["#BFCCB0", "#7D7A66", "#C9CCCF", "#969496"];
-var instruct = ["INSTRUCTIONS", "________", "USE [W][A][S][D] to navigate forwards, backwards, and sideways", "Use the UP AND DOWN ARROW KEYS to ascend and descend floors", "Press [F] for fullscreen",  "Press [I] to pull up this instruction screen again", "________", "PRESS [ESC] OR CLICK ANYWHERE TO CONTINUE"]
+var instruct = ["USE [W][A][S][D] to navigate\nforwards, backwards, and sideways", "Use the UP AND DOWN arrow keys to\nascend and descend floors", "Press [F] for fullscreen",  "Press [I] to pull up the instruction screen", "PRESS [ESC] OR CLICK ANYWHERE TO CONTINUE"]
 
 // Variable that is a function 
 var drawFunction;
@@ -72,11 +84,19 @@ function preload() {
     imgBg[6] = loadImage('assets/img/sims_screenshots/patio.png');
     imgBg[7] = loadImage('assets/img/sims_screenshots/masterbath.png');
     imgBg[8] = loadImage('assets/img/sims_screenshots/loft.png');
+    imgBg[9] = loadImage('assets/img/sims_screenshots/outside.png');
 
   // Instruction Images
-    imgMouse = loadImage('assets/img/instruct/mouse.png');
-    imgWASD = loadImage('assets/img/instruct/wasd.png');
-    imgARROWS = loadImage('assets/img/instruct/arrows.png');
+    imgMouse = loadImage('assets/instruct/mouse.png');
+    imgMouseGrey = loadImage('assets/instruct/mouse_grey.png');
+    imgWASD = loadImage('assets/instruct/wasd.png');
+    imgARROWS = loadImage('assets/instruct/arrows.png');
+    imgRightARROWS = loadImage('assets/instruct/arrows_faceright.png');
+    imgKeyI = loadImage('assets/instruct/i_key.png');
+    imgKeyF = loadImage('assets/instruct/f_key.png');
+    imgKeyEsc = loadImage('assets/instruct/esc_key.png');
+
+    imgInstruct =[imgWASD, imgRightARROWS, imgKeyF, imgKeyI, imgKeyEsc];
 
   // Fonts
     fontMtHills = loadFont('assets/fonts/mount_hills.otf');
@@ -102,8 +122,8 @@ function setup() {
 function draw() {
     background('#B7CCD5');
     fill('#fff');
+    textSize(30);
     textAlign(CENTER);
-    textSize(width/45);
     noStroke();
     ellipseMode(CENTER);
     rectMode(CENTER);
@@ -112,16 +132,12 @@ function draw() {
 
     // Call the state machine function (a variable)
     drawFunction();
+    drawInstructMessage();
 }
 
 /*************************************************************************
 // States
 **************************************************************************/
-// Position the instructions
-  wasdX = width/4;
-  wasdY = 5*(height/6);
-  arrowX = 3*(width/4);
-  arrowY = 5*(height/6);
 
 drawSplash = function() {
   background(colorsRow1[0]);
@@ -134,10 +150,15 @@ drawSplash = function() {
     text("My House", width/3, height/3);
   pop();
 
-  // click to enter text
-  text("CLICK TO ENTER", width/2.7, 1.6*(height/4));
+  push();
+    textAlign(LEFT);
+    imageMode(CORNER);
+    // click to enter text
+    text("CLICK TO ENTER", width/3 - 50, 1.6*(height/4));
 
-  image(imgMouse, width/3, 2*(height/4), 300, 300);
+    // mouse instruction
+    image(imgMouse, width/3 - width/14 - 55, 1.4*(height/4), width/14, width/14);
+  pop();
 
   // custom bird cursor (must stay at bottom of function order)
   noCursor();
@@ -148,63 +169,240 @@ drawInstructions = function() {
   background(colorsRow1[1]);
   // starting i at 0, as long as i is less than 9, add one to i
   // draw text calling from the instruct array, using the variable i to determine number in the array
-  for (i=0; i < 9; i++) {
-    textSize(35);
-    text(instruct[i], width/2, height/3.5+(i*gTextOffset));
-  }
+  push();
+  textSize(40);
+  text('KEYS & CONTROLS', width/4, height/5 - gTextOffset/2);
+  pop();
 
-  // Draw images
-  image(imgWASD, wasdX, wasdY, 300, 300);
-  image(imgARROWS, arrowX, arrowY, 300, 300);
+  for (i=0; i < 5; i++) {
+    push();
+    textSize(35);
+    textAlign(LEFT);
+    text(instruct[i], width/4, height/4+(i*gTextOffset));
+    pop();
+    image(imgInstruct[i], width/6, height/4+(i*gTextOffset), instructPgWH, instructPgWH);
+  }
 }
 
-
 //////// Rooms
+
+// // W
+// text('Room', wasdX+instructWH/8, wasdY-instructWH/3);
+// // A
+// text('Room', wasdX-instructWH/1.5, wasdY);
+// // S
+// text('Room', wasdX-instructWH/8, wasdY+instructWH/2.8);
+//  // D
+// text('Room', wasdX+instructWH/1.25, wasdY+15);
+
 
 drawLiving = function () {
   background(colorsRow1[3]);
   image(imgBg[0], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // W
+  text('Kitchen', wasdX+instructWH/8, wasdY-instructWH/3);
+  // A
+  text('Garden', wasdX-instructWH/1.5, wasdY);
+  // S
+  text('Exit Front Door', wasdX-instructWH/8, wasdY+instructWH/2.8);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Living Room", 100, 100);
+  pop();
+
+  stateNumber = 0;
 }
 
 drawGarden = function () {
   background(colorsRow4[1]);
   image(imgBg[1], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // D
+  text('Living Room', wasdX+instructWH/1.25, wasdY+15);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Garden", 100, 100);
+  pop();
+
+  stateNumber = 2;
 }
 
 drawKitchen = function () {
   background(colorsRow1[0]);
   image(imgBg[2], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // Up Arrow
+  text('2nd Floor', arrowX-instructWH/8, arrowY-instructWH/3);
+  // A
+  text('Bathroom', wasdX-instructWH/1.5, wasdY);
+  // S
+  text('Living Room', wasdX-instructWH/8, wasdY+instructWH/2.8);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Open Kitchen", 100, 100);
+  pop();
+
+  stateNumber = 1;
 }
 
 drawMainBath = function () {
   background(colorsRow3[0]);
   image(imgBg[3], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // D
+  text('Kitchen', wasdX+instructWH/1.25, wasdY+15);
+    // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Bathroom", 100, 100);
+  pop();
+
+  stateNumber = 3;
 }
 
 drawHallway = function () {
   background(colorsRow4[3]);
   image(imgBg[4], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // W
+  text('Bedroom', wasdX+instructWH/8, wasdY-instructWH/3);
+
+  // Up Arrow
+  text('3rd Floor', arrowX-instructWH/8, arrowY-instructWH/3);
+  // Down Arrow
+  text('1st Floor', arrowX-instructWH/8, arrowY+instructWH/3);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("2nd Floor Hallway", 100, 100);
+  pop();
+
+  stateNumber = 4;
 }
 
 drawBedroom = function () {
   background(colorsRow3[2]);
   image(imgBg[5], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // W
+  text('Patio', wasdX+instructWH/8, wasdY-instructWH/3);
+  // A
+  text('Bathroom', wasdX-instructWH/1.5, wasdY);
+  // S
+  text('Hallway', wasdX-instructWH/8, wasdY+instructWH/2.8);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Bedroom", 100, 100);
+  pop();
+
+  stateNumber = 5;
 }
 
 drawPatio = function () {
-  background(colorsRow4[2]);
+  background(colorsRow3[1]);
   image(imgBg[6], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // S
+  text('Bedroom', wasdX-instructWH/8, wasdY+instructWH/2.8);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Patio", 100, 100);
+  pop();
+
+  stateNumber = 6;
 }
 
 drawMasterBath = function () {
   background(colorsRow3[3]);
   image(imgBg[7], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // D
+  text('Bedroom', wasdX+instructWH/1.25, wasdY+15);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Bathroom", 100, 100);
+  pop();
+
+  stateNumber = 7;
 }
 
 drawLoft = function () {
   background(colorsRow2[3]);
   image(imgBg[8], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // Down Arrow
+  text('2nd Floor', arrowX-instructWH/8, arrowY+instructWH/3);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Creativity Suite", 100, 100);
+  pop();
+
+  stateNumber = 8;
 }
+
+drawOutside = function () {
+  background(colorsRow3[3]);
+  image(imgBg[9], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawControls();
+
+  // W
+  text('Enter', wasdX+instructWH/8, wasdY-instructWH/3);
+
+  // Room Name
+  push();
+    textFont(fontMtHills);
+    textSize(width/25);
+    textAlign(LEFT);
+    text("Exterior", 100, 100);
+  pop();
+
+  stateNumber = 9;
+}
+
+
 
 // Array of functions (cannot be called before preload because these functions have not yet been created)
   // stateFunctions[0] = drawSplash;
@@ -218,12 +416,35 @@ drawLoft = function () {
   stateFunctions[6] = drawPatio;
   stateFunctions[7] = drawMasterBath;
   stateFunctions[8] = drawLoft;
+  stateFunctions[9] = drawOutside;
 
 
 /*************************************************************************
 // Custom functions
 **************************************************************************/
 
+function drawControls() {
+   // Position the controls
+    wasdX = width/6;
+    wasdY = 5*(height/6);
+    arrowX = 5*(width/6);
+    arrowY = 5*(height/6);
+    instructWH = width/6;
+
+    image(imgWASD, wasdX, wasdY, instructWH, instructWH);
+    image(imgARROWS, arrowX, arrowY, instructWH, instructWH);
+}
+
+function drawInstructMessage() {
+  if (drawFunction != drawSplash && drawFunction != drawInstructions) {
+    image(imgKeyI, width-60, 50, 150, 150);
+    push();
+    textSize(28);
+    textAlign(RIGHT);
+    text(instruct[3], width-100, 50);
+    pop();
+  }
+}
 
 
 /*************************************************************************
@@ -232,15 +453,18 @@ drawLoft = function () {
 // Navigate the states
 function keyPressed() {
 
-  if (drawFunction === drawLiving) {  // living
+  if (drawFunction === drawLiving) {
     if (key === 'w') {
         drawFunction = drawKitchen;
     }
     if (key === 'a') {
         drawFunction = drawGarden;
     }
+    if (key === 's') {
+        drawFunction = drawOutside;
+    }
   }
-  else if (drawFunction === drawKitchen) {  // kitchen
+  else if (drawFunction === drawKitchen) {
     if (keyCode === UP_ARROW) {
         drawFunction = drawHallway;
     }
@@ -251,12 +475,12 @@ function keyPressed() {
         drawFunction = drawLiving;
     }
   } 
-  else if (drawFunction === drawGarden) {  // garden
+  else if (drawFunction === drawGarden) {
       if (key === 'd') {
         drawFunction = drawLiving;
     }
   }
-  else if (drawFunction === drawHallway) {  // living
+  else if (drawFunction === drawHallway) {
     if (key === 'w') {
         drawFunction = drawBedroom;
     }
@@ -267,7 +491,7 @@ function keyPressed() {
         drawFunction = drawLoft;
     }
   }
-  else if (drawFunction === drawBedroom) {  // living
+  else if (drawFunction === drawBedroom) {
     if (key === 'w') {
         drawFunction = drawPatio;
     }
@@ -278,24 +502,29 @@ function keyPressed() {
         drawFunction = drawHallway;
     }
   }
-  else if (drawFunction === drawPatio) {  // living
+  else if (drawFunction === drawPatio) {
     if (key === 's') {
         drawFunction = drawBedroom;
     }
   }
-  else if (drawFunction === drawMainBath) {  // living
+  else if (drawFunction === drawMainBath) {
     if (key === 'd') {
         drawFunction = drawKitchen;
     }
   }
-  else if (drawFunction === drawMasterBath) {  // living
+  else if (drawFunction === drawMasterBath) {
     if (key === 'd') {
         drawFunction = drawBedroom;
     }
   }
-  else if (drawFunction === drawLoft) {  // living
+  else if (drawFunction === drawLoft) {
     if (keyCode === DOWN_ARROW) {
         drawFunction = drawHallway;
+    }
+  }
+  else if (drawFunction === drawOutside) {
+    if (key === 'w') {
+        drawFunction = drawLiving;
     }
   }
 
@@ -325,6 +554,6 @@ function mousePressed() {
       drawFunction = drawInstructions;
   }
     else if (drawFunction === drawInstructions) {
-        drawFunction = stateFunctions[stateNumber];
+        drawFunction = drawLiving;
     }
 }

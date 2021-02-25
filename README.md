@@ -1,17 +1,23 @@
 ## Rooms of a House
 ###### by Maj Jenkins
-February 21, 2021
+February 25, 2021
 
 ### Overview
-
+A house with three different floors, accessible through keyboard and mouse click interaction.
 
 ### Technical Details
 
 #### unused code folder
 Previous directions for this project which did not end up being used.
 
+#### brainstorm folder
+Brainstorming the layout of the house.
+
 #### assets/img folder
-Image assets.
+Image assets for the scenes.
+
+#### assets/instruct folder
+Image assets for the controls visualization.
 
 #### assets/fonts
 Font assets:
