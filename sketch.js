@@ -23,6 +23,14 @@ var cursor;
 var imgRatio = 1.7;
 var gTextOffset = 50;
 
+var imgMouse;
+var imgWASD;
+var imgARROWS;
+var wasdX;
+var wasdY;
+var arrowX;
+var arrowY;
+
 // Variables of fonts
 var fontMtHills;
 var fontCoco;
@@ -32,13 +40,14 @@ var colorsRow1 = ["#FADEA8", "#EBB07A", "#E8CFBF", "#D1CFB2"];
 var colorsRow2 = ["#E3B585", "#D98A70", "#B59E8F", "#6E4538"];
 var colorsRow3 = ["#918F6B", "#A1D1C2", "#9CB5C9", "#4F99B8"];
 var colorsRow4 = ["#BFCCB0", "#7D7A66", "#C9CCCF", "#969496"];
-var instruct = ["INSTRUCTIONS", "________", "Press [LEFT ARROW] and [RIGHT ARROW] to rotate moods", "Click [LMB] to play/pause the ambience", "Press [F] for fullscreen", "Press [S] to return to the first state", "Press [I] to pull up this instruction screen again", "________", "PRESS [ESC] OR CLICK ANYWHERE TO CONTINUE"]
+var instruct = ["INSTRUCTIONS", "________", "USE [W][A][S][D] to navigate forwards, backwards, and sideways", "Use the UP AND DOWN ARROW KEYS to ascend and descend floors", "Press [F] for fullscreen",  "Press [I] to pull up this instruction screen again", "________", "PRESS [ESC] OR CLICK ANYWHERE TO CONTINUE"]
 
 // Variable that is a function 
 var drawFunction;
 
 // Beginning the state at 0
-var stateNumber = 2;
+var stateNumber = 0;
+var stateFunctions = [];
 
 /*************************************************************************
 // Window resize
@@ -51,7 +60,7 @@ function windowResized() {
 // Function preload
 **************************************************************************/
 function preload() {
-  // Images
+  // State Images
     splash_img = loadImage('assets/img/splash.png');
     cursor = loadImage('assets/cursor.png');
     imgBg[0] = loadImage('assets/img/sims_screenshots/living.png');
@@ -63,6 +72,11 @@ function preload() {
     imgBg[6] = loadImage('assets/img/sims_screenshots/patio.png');
     imgBg[7] = loadImage('assets/img/sims_screenshots/masterbath.png');
     imgBg[8] = loadImage('assets/img/sims_screenshots/loft.png');
+
+  // Instruction Images
+    imgMouse = loadImage('assets/img/instruct/mouse.png');
+    imgWASD = loadImage('assets/img/instruct/wasd.png');
+    imgARROWS = loadImage('assets/img/instruct/arrows.png');
 
   // Fonts
     fontMtHills = loadFont('assets/fonts/mount_hills.otf');
@@ -79,7 +93,7 @@ function setup() {
     textFont(fontBulletin);
 
     // Set to splash screen for startup
-    drawFunction = stateFunctions[0];
+    drawFunction = drawSplash;
 }
 
 /*************************************************************************
@@ -103,19 +117,29 @@ function draw() {
 /*************************************************************************
 // States
 **************************************************************************/
+// Position the instructions
+  wasdX = width/4;
+  wasdY = 5*(height/6);
+  arrowX = 3*(width/4);
+  arrowY = 5*(height/6);
 
 drawSplash = function() {
   background(colorsRow1[0]);
   image(splash_img, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
 
+  // Title
   push();
     textFont(fontMtHills);
     textSize(width/20);
     text("My House", width/3, height/3);
   pop();
 
+  // click to enter text
   text("CLICK TO ENTER", width/2.7, 1.6*(height/4));
 
+  image(imgMouse, width/3, 2*(height/4), 300, 300);
+
+  // custom bird cursor (must stay at bottom of function order)
   noCursor();
   image(cursor, mouseX, mouseY, 50, 50);
 }
@@ -128,6 +152,10 @@ drawInstructions = function() {
     textSize(35);
     text(instruct[i], width/2, height/3.5+(i*gTextOffset));
   }
+
+  // Draw images
+  image(imgWASD, wasdX, wasdY, 300, 300);
+  image(imgARROWS, arrowX, arrowY, 300, 300);
 }
 
 
@@ -175,11 +203,21 @@ drawMasterBath = function () {
 
 drawLoft = function () {
   background(colorsRow2[3]);
-  image(imgBg[7], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  image(imgBg[8], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
 }
 
-// Array of function-variables (cannot be called before preload because these functions have not yet been created)
-  var stateFunctions = [drawSplash, drawInstructions, drawLiving, drawKitchen, drawGarden, drawMainBath, drawHallway, drawBedroom, drawPatio, drawMasterBath, drawLoft];
+// Array of functions (cannot be called before preload because these functions have not yet been created)
+  // stateFunctions[0] = drawSplash;
+  // stateFunctions[1] = drawInstructions;
+  stateFunctions[0] = drawLiving;
+  stateFunctions[1] = drawKitchen;
+  stateFunctions[2] = drawGarden;
+  stateFunctions[3] = drawMainBath;
+  stateFunctions[4] = drawHallway;
+  stateFunctions[5] = drawBedroom;
+  stateFunctions[6] = drawPatio;
+  stateFunctions[7] = drawMasterBath;
+  stateFunctions[8] = drawLoft;
 
 
 /*************************************************************************
@@ -193,68 +231,91 @@ drawLoft = function () {
 **************************************************************************/
 // Navigate the states
 function keyPressed() {
-    // Fullscreen toggle
-    if (key === 'f') {
-        let fs = fullscreen();
-        fullscreen(!fs);
-    }
 
-    // I for instructions state
-    if (key === 'i') {
-        drawFunction = drawInstructions;
-    }
-
-    // Escape key to exit instructions state
-    if (key === 'Escape') {
-      // if stateNumber = drawInstructions {
-      //   drawFunction = stateFunctions[stateNumber];
-      // }
-    }
-
-    // // Left arrow rotates states backwards
-    // if (keyCode === LEFT_ARROW) {
-
-    // }
-
-    // // Right arrow rotates states forwards
-    // else if (keyCode === RIGHT_ARROW) {
-
-    // }
-
-
-  // Living room
-  if (drawFunction = drawLiving) {
+  if (drawFunction === drawLiving) {  // living
     if (key === 'w') {
-      drawFunction = drawKitchen;
+        drawFunction = drawKitchen;
     }
     if (key === 'a') {
-      drawFunction = drawGarden;
+        drawFunction = drawGarden;
     }
   }
-
-  // Garden
-  if (stateFunctions = drawGarden) {
+  else if (drawFunction === drawKitchen) {  // kitchen
+    if (keyCode === UP_ARROW) {
+        drawFunction = drawHallway;
+    }
+    if (key === 'a') {
+        drawFunction = drawMainBath;
+    }
+    if (key === 's') {
+        drawFunction = drawLiving;
+    }
+  } 
+  else if (drawFunction === drawGarden) {  // garden
+      if (key === 'd') {
+        drawFunction = drawLiving;
+    }
+  }
+  else if (drawFunction === drawHallway) {  // living
+    if (key === 'w') {
+        drawFunction = drawBedroom;
+    }
+    if (keyCode === DOWN_ARROW) {
+        drawFunction = drawKitchen;
+    }
+    if (keyCode === UP_ARROW) {
+        drawFunction = drawLoft;
+    }
+  }
+  else if (drawFunction === drawBedroom) {  // living
+    if (key === 'w') {
+        drawFunction = drawPatio;
+    }
+    if (key === 'a') {
+        drawFunction = drawMasterBath;
+    }
+    if (key === 's') {
+        drawFunction = drawHallway;
+    }
+  }
+  else if (drawFunction === drawPatio) {  // living
+    if (key === 's') {
+        drawFunction = drawBedroom;
+    }
+  }
+  else if (drawFunction === drawMainBath) {  // living
     if (key === 'd') {
-      drawFunction = drawLiving;
+        drawFunction = drawKitchen;
+    }
+  }
+  else if (drawFunction === drawMasterBath) {  // living
+    if (key === 'd') {
+        drawFunction = drawBedroom;
+    }
+  }
+  else if (drawFunction === drawLoft) {  // living
+    if (keyCode === DOWN_ARROW) {
+        drawFunction = drawHallway;
     }
   }
 
-  // // Kitchen
-  // if (drawFunction = drawKitchen) {
-  //   if (key === 's') {
-  //     drawFunction = drawLiving;
-  //   }
-  //   if (key === 'w') {
-  //     drawFunction = drawHallway;
-  //   }
-  //   if (key === 'a') {
-  //     drawFunction = drawMainBath;
-  //   }
-  // }
+  // I for instructions state
+  if (key === 'i') {
+      drawFunction = drawInstructions;
+  }
 
+  // Escape key to exit instructions state
+  if (key === 'Escape') {
+    if (drawFunction === drawInstructions) {
+      drawFunction = stateFunctions[stateNumber];
+    }
+  }
 
-
-
+  // Fullscreen toggle
+  if (key === 'f') {
+      let fs = fullscreen();
+      fullscreen(!fs);
+  }
 }
 
 //Splash to instructions to first
