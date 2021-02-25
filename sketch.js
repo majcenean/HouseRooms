@@ -20,6 +20,7 @@ var imgChar = [];
 var splash_img;
 var cursor;
 var imgRatio = 1.7;
+var imgDeco = [];
 
 // Control key images Part 1
 var imgMouse;
@@ -97,6 +98,16 @@ function preload() {
     imgKeyEsc = loadImage('assets/instruct/esc_key.png');
 
     imgInstruct =[imgWASD, imgRightARROWS, imgKeyF, imgKeyI, imgKeyEsc];
+
+  // Decoration Images
+    imgDeco[0] = loadImage('assets/deco/deco_living.png');
+    imgDeco[1] = loadImage('assets/deco/deco_garden.png');
+    imgDeco[2] = loadImage('assets/deco/deco_kitchen.png');
+    imgDeco[3] = loadImage('assets/deco/deco_bathroom.png');
+    imgDeco[4] = loadImage('assets/deco/deco_hallway.png');
+    imgDeco[5] = loadImage('assets/deco/deco_bedroom.png');
+    imgDeco[6] = loadImage('assets/deco/deco_patio.png');
+    imgDeco[7] = loadImage('assets/deco/deco_loft.png');
 
   // Fonts
     fontMtHills = loadFont('assets/fonts/mount_hills.otf');
@@ -201,6 +212,8 @@ drawLiving = function () {
   image(imgBg[0], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
 
+  image(imgDeco[0], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
+
   // W
   text('Kitchen', wasdX+instructWH/8, wasdY-instructWH/3);
   // A
@@ -224,6 +237,9 @@ drawGarden = function () {
   image(imgBg[1], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
 
+  image(imgDeco[1], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
+
+
   // D
   text('Living Room', wasdX+instructWH/1.25, wasdY+15);
 
@@ -242,6 +258,8 @@ drawKitchen = function () {
   background(colorsRow1[0]);
   image(imgBg[2], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
+
+  image(imgDeco[2], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
 
   // Up Arrow
   text('2nd Floor', arrowX-instructWH/8, arrowY-instructWH/3);
@@ -266,6 +284,8 @@ drawMainBath = function () {
   image(imgBg[3], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
 
+  image(imgDeco[3], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
+
   // D
   text('Kitchen', wasdX+instructWH/1.25, wasdY+15);
     // Room Name
@@ -283,6 +303,8 @@ drawHallway = function () {
   background(colorsRow4[3]);
   image(imgBg[4], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
+
+  image(imgDeco[4], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
 
   // W
   text('Bedroom', wasdX+instructWH/8, wasdY-instructWH/3);
@@ -308,6 +330,8 @@ drawBedroom = function () {
   image(imgBg[5], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
 
+  image(imgDeco[5], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
+
   // W
   text('Patio', wasdX+instructWH/8, wasdY-instructWH/3);
   // A
@@ -331,6 +355,8 @@ drawPatio = function () {
   image(imgBg[6], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
 
+  image(imgDeco[6], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
+
   // S
   text('Bedroom', wasdX-instructWH/8, wasdY+instructWH/2.8);
 
@@ -350,6 +376,8 @@ drawMasterBath = function () {
   image(imgBg[7], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
 
+  image(imgDeco[3], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
+
   // D
   text('Bedroom', wasdX+instructWH/1.25, wasdY+15);
 
@@ -368,6 +396,8 @@ drawLoft = function () {
   background(colorsRow2[3]);
   image(imgBg[8], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
   drawControls();
+
+  image(imgDeco[7], (width/2+(1920/imgRatio)/2)-100, height/8+(1080/imgRatio)/2, 150*1.5, 300*1.5);
 
   // Down Arrow
   text('2nd Floor', arrowX-instructWH/8, arrowY+instructWH/3);
